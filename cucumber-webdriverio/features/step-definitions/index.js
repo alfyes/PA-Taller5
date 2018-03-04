@@ -47,9 +47,14 @@ defineSupportCode(({Given, When, Then}) => {
         passwordInput.keys(password)
     });
 
-    Then('I expect to see {string}', error => {
+    Then('I expect to see the message {string}', error => {
         browser.waitForVisible('.aviso.alert.alert-danger', 5000);
         var alertText = browser.element('.aviso.alert.alert-danger').getText();
         expect(alertText).to.include(error);
+    });
+    
+    Then('I expect to see the user image', () => {
+        browser.waitForVisible('button[id="cuenta"]', 5000);
+
     });
 });
