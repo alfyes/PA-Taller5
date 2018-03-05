@@ -57,4 +57,33 @@ defineSupportCode(({Given, When, Then}) => {
         browser.waitForVisible('button[id="cuenta"]', 5000);
 
     });
+    
+    When(/^I fill the sign up form with firstname:(.*), lastname:(.*), email:(.*), password:(.*) and agreeterms:(.*)$/,
+        (firstname, lastname, email, password, agreeterms) => {
+        
+            var cajaSignUp = browser.element('.cajaSignUp');
+        
+            cajaSignUp.element('input[name="nombre"]').click().keys(firstname);
+            cajaSignUp.element('input[name="apellido"]').click().keys(lastname);
+            cajaSignUp.element('input[name="correo"]').click().keys(email);
+            cajaSignUp.element('select[name="idUniversidad"]').selectByVisibleText('Universidad de los Andes');
+            cajaSignUp.element('input[type="checkbox"]').click();
+            cajaSignUp.element('select[name="idPrograma"]').selectByVisibleText('Maestría en Ingeniería de Software');
+            cajaSignUp.element('input[name="password"]').click().keys(password);
+            if(agreeterms == 'true')
+                cajaSignUp.element('input[name="acepta"]').click();
+    });
+
+    When('I try to sign up', () => {
+
+        var cajaSignUp = browser.element('.cajaSignUp');
+        cajaSignUp.element('button=Registrarse').click();
+    });
+    
+    Then('I expect to see the alert {string}', (error) => {
+        
+        browser.waitForVisible('.sweet-alert', 5000);
+        var alertText = browser.element('.sweet-alert').element('.text-muted').element('div').getText();
+        expect(alertText).contain('Error: Ya existe un usuario registrado con el correo');
+    });
 });
